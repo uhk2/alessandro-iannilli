@@ -1,0 +1,1051 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Alessandro Iannilli — Technical Business Analyst</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --forest:   #2d4a2d;
+      --pine:     #3a5f3a;
+      --moss:     #5c7a4e;
+      --sage:     #8aab78;
+      --fern:     #b5c9a3;
+      --mist:     #e8efe4;
+      --lake:     #3d6b72;
+      --water:    #6fa3a9;
+      --sand:     #d8ccb0;
+      --bark:     #7a6248;
+      --cream:    #f6f3ed;
+      --ink:      #1e2c1e;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background-color: var(--cream);
+      color: var(--ink);
+      overflow-x: hidden;
+    }
+
+    /* ── NOISE TEXTURE OVERLAY ── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 999;
+      opacity: 0.4;
+    }
+
+    /* ── HERO ── */
+    .hero {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-left {
+      background: var(--forest);
+      padding: 80px 60px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-left::after {
+      content: '';
+      position: absolute;
+      bottom: -120px; right: -120px;
+      width: 400px; height: 400px;
+      border-radius: 50%;
+      background: radial-gradient(circle, var(--lake) 0%, transparent 70%);
+      opacity: 0.35;
+    }
+
+    .hero-left::before {
+      content: '';
+      position: absolute;
+      top: -60px; left: -60px;
+      width: 300px; height: 300px;
+      border-radius: 50%;
+      background: radial-gradient(circle, var(--moss) 0%, transparent 70%);
+      opacity: 0.4;
+    }
+
+    /* Leaves sit behind all hero-left content */
+    .leaf {
+      position: absolute;
+      pointer-events: none;
+      opacity: 0;
+      z-index: 0;
+      animation: leafFall linear forwards;
+      will-change: transform, opacity;
+    }
+
+    .hero-left > *:not(.leaf) {
+      position: relative;
+      z-index: 2;
+    }
+
+    .leaf.maple-big {
+      filter: drop-shadow(0 2px 6px rgba(0,0,0,0.18));
+    }
+
+    @keyframes leafFall {
+      0%   { opacity: 0;    transform: translateY(-40px) rotate(0deg) translateX(0px); }
+      8%   { opacity: 0.55; }
+      88%  { opacity: 0.42; }
+      96%  { opacity: 0.18; }
+      100% { opacity: 0;    transform: translateY(110vh) rotate(720deg) translateX(var(--drift)); }
+    }
+
+    /* ── HERO TEXT ── */
+    .hero-name {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2.8rem, 5vw, 4.2rem);
+      font-weight: 600;
+      color: var(--mist);
+      line-height: 1.1;
+      letter-spacing: -0.5px;
+      opacity: 0;
+      animation: fadeUp 0.9s ease forwards 0.2s;
+    }
+    .hero-name em { font-style: italic; color: var(--sage); }
+
+    .hero-title {
+      font-size: 0.85rem;
+      font-weight: 500;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--water);
+      margin-top: 16px;
+      opacity: 0;
+      animation: fadeUp 0.9s ease forwards 0.4s;
+    }
+
+    .hero-divider {
+      width: 48px; height: 2px;
+      background: var(--sage);
+      margin: 28px 0;
+      opacity: 0;
+      animation: fadeUp 0.9s ease forwards 0.5s;
+    }
+
+    .hero-bio {
+      font-size: 1rem;
+      font-weight: 300;
+      color: var(--fern);
+      line-height: 1.75;
+      max-width: 380px;
+      opacity: 0;
+      animation: fadeUp 0.9s ease forwards 0.6s;
+    }
+
+    /* ── BUTTONS ── */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 24px;
+      border-radius: 4px;
+      font-size: 0.82rem;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      text-decoration: none;
+      transition: all 0.25s ease;
+      cursor: pointer;
+      border: none;
+    }
+    .btn-primary { background: var(--sage); color: var(--forest); }
+    .btn-primary:hover { background: var(--fern); transform: translateY(-2px); }
+    .btn-outline { border: 1.5px solid var(--water); color: var(--water); background: transparent; }
+    .btn-outline:hover { background: var(--water); color: var(--forest); transform: translateY(-2px); }
+
+    /* ── HERO RIGHT ── */
+    .hero-right {
+      background: var(--mist);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 80px 60px;
+      position: relative;
+    }
+
+    .hero-right::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse at 80% 20%, rgba(93,122,78,0.12) 0%, transparent 60%),
+        radial-gradient(ellipse at 20% 80%, rgba(61,107,114,0.1) 0%, transparent 60%);
+    }
+
+    .quick-stats {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      position: relative;
+    }
+
+    .stat-card {
+      background: white;
+      border-radius: 8px;
+      padding: 28px 24px;
+      border-left: 3px solid var(--moss);
+      box-shadow: 0 2px 20px rgba(45,74,45,0.07);
+      opacity: 0;
+      animation: fadeUp 0.7s ease forwards;
+    }
+    .stat-card:nth-child(1) { animation-delay: 0.5s; }
+    .stat-card:nth-child(2) { animation-delay: 0.65s; }
+    .stat-card:nth-child(3) { animation-delay: 0.8s;  border-left-color: var(--lake); }
+    .stat-card:nth-child(4) { animation-delay: 0.95s; border-left-color: var(--lake); }
+
+    .stat-number {
+      font-family: 'Playfair Display', serif;
+      font-size: 2.2rem;
+      font-weight: 600;
+      color: var(--forest);
+    }
+
+    .stat-label {
+      font-size: 0.78rem;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--moss);
+      margin-top: 6px;
+    }
+
+    /* ── SECTION WRAPPER ── */
+    .section { padding: 100px 0; }
+
+    .section-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 60px;
+    }
+
+    .section-tag {
+      font-size: 0.75rem;
+      font-weight: 500;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--moss);
+      margin-bottom: 12px;
+    }
+
+    .section-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.8rem, 3vw, 2.6rem);
+      font-weight: 600;
+      color: var(--forest);
+      line-height: 1.2;
+    }
+    .section-title em { font-style: italic; color: var(--lake); }
+
+    /* ── ABOUT ── */
+    .about-section { background: white; }
+
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 1.4fr;
+      gap: 80px;
+      align-items: start;
+      margin-top: 56px;
+    }
+
+    .about-quote {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.35rem;
+      font-style: italic;
+      color: var(--forest);
+      line-height: 1.65;
+      padding-left: 24px;
+      border-left: 3px solid var(--sage);
+    }
+
+    .about-text {
+      font-size: 1rem;
+      font-weight: 300;
+      color: #4a5a4a;
+      line-height: 1.85;
+    }
+
+    .lang-chips { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 28px; }
+
+    .chip {
+      padding: 6px 16px;
+      border-radius: 100px;
+      font-size: 0.78rem;
+      font-weight: 500;
+      letter-spacing: 0.05em;
+    }
+    .chip-green { background: var(--mist); color: var(--forest); border: 1px solid var(--fern); }
+
+    /* ── SKILLS / EXPERTISE ── */
+    .skills-section {
+      background: var(--forest);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .skills-section::before {
+      content: '';
+      position: absolute;
+      top: -200px; right: -200px;
+      width: 600px; height: 600px;
+      border-radius: 50%;
+      background: radial-gradient(circle, var(--lake) 0%, transparent 65%);
+      opacity: 0.2;
+    }
+
+    .skills-section .section-tag  { color: var(--sage); }
+    .skills-section .section-title { color: var(--mist); }
+
+    /* z-index layering inside skills panel:
+       wind swirls = 1  |  grass = 3  |  section-inner content = 4  */
+    .skills-section .section-inner {
+      position: relative;
+      z-index: 4;
+      padding-bottom: 110px; /* clears the 90px grass */
+    }
+
+    .skills-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 40px;
+      margin-top: 56px;
+    }
+
+    .skill-group-title {
+      font-size: 0.72rem;
+      font-weight: 500;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--water);
+      margin-bottom: 20px;
+    }
+
+    .skill-tags { display: flex; flex-wrap: wrap; gap: 10px; }
+
+    .skill-tag {
+      padding: 8px 18px;
+      border-radius: 4px;
+      font-size: 0.82rem;
+      font-weight: 400;
+      background: rgba(255,255,255,0.06);
+      color: var(--fern);
+      border: 1px solid rgba(181,201,163,0.2);
+      transition: all 0.2s;
+    }
+    .skill-tag:hover {
+      background: rgba(255,255,255,0.12);
+      color: var(--mist);
+      border-color: var(--sage);
+    }
+
+    /* Grass — direct child of .skills-section, anchors to its bottom */
+    .grass-field {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 90px;
+      pointer-events: none;
+      z-index: 3;
+      overflow: visible;
+    }
+
+    .grass-blade {
+      position: absolute;
+      bottom: 0;
+      width: var(--blade-w);
+      height: var(--blade-h);
+      transform-origin: bottom center;
+      animation: sway var(--sway-dur) ease-in-out infinite alternate;
+      animation-delay: var(--sway-delay);
+    }
+
+    @keyframes sway {
+      0%   { transform: rotate(var(--lean-from)) skewX(var(--skew-from)); }
+      100% { transform: rotate(var(--lean-to))   skewX(var(--skew-to)); }
+    }
+
+    /* Wind swirls behind everything in skills panel */
+    .wind-swirl {
+      position: absolute;
+      pointer-events: none;
+      z-index: 1;
+      opacity: 0;
+      animation: swirlMove var(--swirl-dur) ease-in-out forwards;
+    }
+
+    @keyframes swirlMove {
+      0%   { opacity: 0;    transform: translateX(0)          translateY(0)          scale(0.6) rotate(0deg);   }
+      15%  { opacity: 0.55; transform: translateX(var(--sx1)) translateY(var(--sy1)) scale(1)   rotate(40deg);  }
+      50%  { opacity: 0.38; transform: translateX(var(--sx2)) translateY(var(--sy2)) scale(1.2) rotate(130deg); }
+      85%  { opacity: 0.2;  transform: translateX(var(--sx3)) translateY(var(--sy3)) scale(0.9) rotate(260deg); }
+      100% { opacity: 0;    transform: translateX(var(--sx4)) translateY(var(--sy4)) scale(0.5) rotate(360deg); }
+    }
+
+    /* ── EXPERIENCE ── */
+    .experience-section { background: var(--cream); }
+
+    .timeline {
+      margin-top: 60px;
+      position: relative;
+      padding-left: 32px;
+    }
+
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 0; top: 8px; bottom: 8px;
+      width: 2px;
+      background: linear-gradient(to bottom, var(--sage), var(--water), transparent);
+    }
+
+    .timeline-item {
+      position: relative;
+      margin-bottom: 52px;
+      padding-left: 36px;
+    }
+
+    .timeline-dot {
+      position: absolute;
+      left: -38px; top: 6px;
+      width: 12px; height: 12px;
+      border-radius: 50%;
+      background: var(--sage);
+      border: 2px solid var(--cream);
+      box-shadow: 0 0 0 3px var(--sage);
+    }
+
+    .timeline-dot.current {
+      background: var(--lake);
+      box-shadow: 0 0 0 3px var(--lake);
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { box-shadow: 0 0 0 3px var(--lake); }
+      50%       { box-shadow: 0 0 0 6px rgba(61,107,114,0.3); }
+    }
+
+    .timeline-date {
+      font-size: 0.75rem;
+      font-weight: 500;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--moss);
+      margin-bottom: 8px;
+    }
+
+    .timeline-role {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--forest);
+    }
+
+    .timeline-company {
+      font-size: 0.88rem;
+      font-weight: 500;
+      color: var(--lake);
+      margin-top: 4px;
+      margin-bottom: 14px;
+    }
+
+    .timeline-desc {
+      font-size: 0.93rem;
+      font-weight: 300;
+      color: #4a5a4a;
+      line-height: 1.75;
+      max-width: 620px;
+    }
+
+    /* ── PROJECTS ── */
+    .projects-section { background: white; }
+
+    .projects-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 28px;
+      margin-top: 56px;
+    }
+
+    .project-card {
+      background: var(--cream);
+      border-radius: 8px;
+      padding: 36px 28px;
+      position: relative;
+      overflow: hidden;
+      border: 1px solid var(--fern);
+      transition: transform 0.25s ease, box-shadow 0.25s ease;
+    }
+    .project-card:hover { transform: translateY(-5px); box-shadow: 0 16px 48px rgba(45,74,45,0.12); }
+
+    .project-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--sage), var(--water));
+    }
+
+    .project-number {
+      font-family: 'Playfair Display', serif;
+      font-size: 3rem;
+      font-weight: 600;
+      color: var(--fern);
+      line-height: 1;
+      margin-bottom: 16px;
+    }
+
+    .project-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--forest);
+      margin-bottom: 12px;
+    }
+
+    .project-desc {
+      font-size: 0.88rem;
+      font-weight: 300;
+      color: #4a5a4a;
+      line-height: 1.7;
+    }
+
+    /* ── EDUCATION ── */
+    .education-section { background: var(--mist); }
+
+    .edu-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      margin-top: 56px;
+    }
+
+    .edu-card {
+      background: white;
+      border-radius: 8px;
+      padding: 32px 28px;
+      border-top: 3px solid var(--moss);
+    }
+
+    .edu-year {
+      font-size: 0.75rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--moss);
+      margin-bottom: 10px;
+    }
+
+    .edu-degree {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.05rem;
+      font-weight: 600;
+      color: var(--forest);
+      margin-bottom: 8px;
+    }
+
+    .edu-school {
+      font-size: 0.85rem;
+      color: var(--lake);
+      font-weight: 500;
+      margin-bottom: 10px;
+    }
+
+    .edu-focus {
+      font-size: 0.82rem;
+      font-weight: 300;
+      color: #5a6a5a;
+      line-height: 1.6;
+    }
+
+    /* ── CTA STRIP ── */
+    .cta-section {
+      background: var(--forest);
+      padding: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      flex-wrap: wrap;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .cta-section::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse at 20% 50%, rgba(61,107,114,0.3) 0%, transparent 60%),
+        radial-gradient(ellipse at 80% 50%, rgba(92,122,78,0.2) 0%, transparent 60%);
+      pointer-events: none;
+    }
+
+    .btn-cta-primary {
+      position: relative;
+      background: var(--sage);
+      color: var(--forest);
+      font-weight: 600;
+      padding: 14px 32px;
+    }
+    .btn-cta-primary:hover { background: var(--fern); transform: translateY(-2px); }
+
+    .btn-cta-outline {
+      position: relative;
+      border: 1.5px solid var(--water);
+      color: var(--water);
+      background: transparent;
+      padding: 14px 32px;
+    }
+    .btn-cta-outline:hover { background: var(--water); color: var(--forest); transform: translateY(-2px); }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--ink);
+      padding: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 24px;
+    }
+
+    .footer-name {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.4rem;
+      color: var(--mist);
+    }
+
+    .footer-tagline {
+      font-size: 0.8rem;
+      color: var(--sage);
+      margin-top: 4px;
+      letter-spacing: 0.05em;
+    }
+
+    .footer-links { display: flex; gap: 20px; align-items: center; }
+
+    .footer-link {
+      font-size: 0.8rem;
+      color: var(--fern);
+      text-decoration: none;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      transition: color 0.2s;
+    }
+    .footer-link:hover { color: var(--sage); }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      .hero          { grid-template-columns: 1fr; }
+      .hero-left     { padding: 80px 40px 60px; }
+      .hero-right    { padding: 60px 40px 80px; }
+      .quick-stats   { grid-template-columns: 1fr 1fr; }
+      .about-grid    { grid-template-columns: 1fr; gap: 40px; }
+      .skills-grid   { grid-template-columns: 1fr; }
+      .projects-grid { grid-template-columns: 1fr; }
+      .edu-grid      { grid-template-columns: 1fr; }
+      .section-inner { padding: 0 32px; }
+      .cta-section   { padding: 40px 32px; flex-direction: column; }
+      footer         { padding: 40px 32px; flex-direction: column; align-items: flex-start; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ════════ HERO ════════ -->
+<section class="hero">
+  <div class="hero-left">
+    <div class="hero-name">Alessandro<br/><em>Iannilli</em></div>
+    <div class="hero-title">Technical Business Analyst</div>
+    <div class="hero-divider"></div>
+    <p class="hero-bio">
+      Engineer at heart. Bridging business strategy with technical execution — from AI-powered automation to data engineering — across international teams and Fortune 500 environments.
+    </p>
+  </div>
+
+  <div class="hero-right">
+    <div class="quick-stats">
+      <div class="stat-card">
+        <div class="stat-number">8+</div>
+        <div class="stat-label">Years of Experience</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number">3</div>
+        <div class="stat-label">Languages</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number" style="font-size:1.4rem;line-height:1.25;">Fortune<br>500</div>
+        <div class="stat-label">Client Experience</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number" style="font-size:1.3rem;line-height:1.25;">Master's</div>
+        <div class="stat-label">Software Engineering</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════ ABOUT ════════ -->
+<section class="section about-section">
+  <div class="section-inner">
+    <div class="section-tag reveal">About Me</div>
+    <h2 class="section-title reveal">An engineer who speaks<br/><em>business fluently</em></h2>
+
+    <div class="about-grid">
+      <div class="reveal">
+        <blockquote class="about-quote">
+          "I'm an engineer at heart who believes in learning by doing, making every experience meaningful and long-lasting."
+        </blockquote>
+        <div class="lang-chips" style="margin-top:32px;">
+          <span class="chip chip-green">🇲🇽 Spanish — Native</span>
+          <span class="chip chip-green">🇬🇧 English — Fluent</span>
+          <span class="chip chip-green">🇮🇹 Italian — Fluent</span>
+        </div>
+      </div>
+      <div class="reveal">
+        <p class="about-text">
+          I enjoy my work and the extraordinary people and places it connects me with. My focus is on growing my abilities, sharing knowledge, and contributing to a cleaner, fairer, and more respectful world.
+          <br/><br/>
+          With a background spanning IT management, business intelligence, and technical analysis, I bring a rare combination of strategic thinking and hands-on technical depth. I thrive in cross-functional environments where technology meets real business impact — and I believe the best solutions are always built together.
+          <br/><br/>
+          Certified Six Sigma Green Belt and Lean Six Sigma practitioner, with a Master's in Software Engineering and a freshly minted certification in Digital Project Management.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════ SKILLS / EXPERTISE ════════ -->
+<section class="section skills-section">
+  <!-- grass-field is direct child of section so it sits flush at section bottom -->
+  <div class="grass-field" id="grassField"></div>
+
+  <div class="section-inner">
+    <div class="section-tag reveal">Expertise</div>
+    <h2 class="section-title reveal">What I bring<br/><em>to the table</em></h2>
+
+    <div class="skills-grid">
+      <div class="reveal">
+        <div class="skill-group-title">Leadership &amp; Strategy</div>
+        <div class="skill-tags">
+          <span class="skill-tag">Project Management</span>
+          <span class="skill-tag">Digital Transformation</span>
+          <span class="skill-tag">Stakeholder Engagement</span>
+          <span class="skill-tag">Cross-Cultural Teams</span>
+          <span class="skill-tag">Governance</span>
+          <span class="skill-tag">Strategy</span>
+          <span class="skill-tag">Compliance</span>
+        </div>
+      </div>
+      <div class="reveal">
+        <div class="skill-group-title">Technical Stack</div>
+        <div class="skill-tags">
+          <span class="skill-tag">AI / LLM</span>
+          <span class="skill-tag">ETL / Data Pipelines</span>
+          <span class="skill-tag">Machine Learning</span>
+          <span class="skill-tag">APIs</span>
+          <span class="skill-tag">Cloud (Azure / Snowflake)</span>
+          <span class="skill-tag">CI/CD</span>
+          <span class="skill-tag">Data Modeling</span>
+          <span class="skill-tag">System Migration</span>
+          <span class="skill-tag">Agile / Lean</span>
+          <span class="skill-tag">Containers</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════ EXPERIENCE ════════ -->
+<section class="section experience-section">
+  <div class="section-inner">
+    <div class="section-tag reveal">Career</div>
+    <h2 class="section-title reveal">Where I've<br/><em>made an impact</em></h2>
+
+    <div class="timeline">
+      <div class="timeline-item reveal">
+        <div class="timeline-dot current"></div>
+        <div class="timeline-date">June 2024 — Present</div>
+        <div class="timeline-role">Technical Business Analyst</div>
+        <div class="timeline-company">CHUBB Insurance · México</div>
+        <p class="timeline-desc">Leveraging AI across cross-functional teams to design, develop, and implement automation and modernization projects in the insurance industry. Bridging business objectives with technical execution across Claim Automation, Fraud Prevention, and Portal Systems Migration — delivering measurable gains in process efficiency and reliability.</p>
+      </div>
+      <div class="timeline-item reveal">
+        <div class="timeline-dot"></div>
+        <div class="timeline-date">2022 — 2024</div>
+        <div class="timeline-role">IT Development Consultant</div>
+        <div class="timeline-company">Tata Consultancy Services (TCS) · México</div>
+        <p class="timeline-desc">Developed and maintained BI reports and automated data pipelines supporting several departments across two Fortune 500 retail companies. Led data migrations using Snowflake and Azure, with close stakeholder collaboration to ensure timely, reliable, and user-friendly solutions.</p>
+      </div>
+      <div class="timeline-item reveal">
+        <div class="timeline-dot"></div>
+        <div class="timeline-date">2021 — 2022</div>
+        <div class="timeline-role">BI Consultant</div>
+        <div class="timeline-company">Allity · México</div>
+        <p class="timeline-desc">BI report development, data security, governance and maintenance covering financial, operational, and metadata streams for an international logistics company. Designed, automated, and optimized pipelines within the Azure Synapse platform.</p>
+      </div>
+      <div class="timeline-item reveal">
+        <div class="timeline-dot"></div>
+        <div class="timeline-date">2015 — 2021</div>
+        <div class="timeline-role">General IT Manager</div>
+        <div class="timeline-company">Ánfora Hospitality Group · México</div>
+        <p class="timeline-desc">Responsible for all IT operations, data management and reporting, and the complete digital transformation of a 50+ employee food and hospitality family business — from infrastructure to analytics.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════ PROJECTS ════════ -->
+<section class="section projects-section">
+  <div class="section-inner">
+    <div class="section-tag reveal">Projects</div>
+    <h2 class="section-title reveal">Selected<br/><em>initiatives</em></h2>
+
+    <div class="projects-grid">
+      <div class="project-card reveal">
+        <div class="project-number">01</div>
+        <div class="project-title">Claim Automation — CHUBB</div>
+        <p class="project-desc">End-to-end automation of insurance claim processing using AI and workflow orchestration, reducing manual handling time and improving accuracy across operations.</p>
+      </div>
+      <div class="project-card reveal">
+        <div class="project-number">02</div>
+        <div class="project-title">Fraud Prevention System</div>
+        <p class="project-desc">Designed and implemented a fraud detection initiative at CHUBB combining ML signals with business rules, enhancing risk identification without disrupting legitimate claims.</p>
+      </div>
+      <div class="project-card reveal">
+        <div class="project-number">03</div>
+        <div class="project-title">Portal Systems Migration</div>
+        <p class="project-desc">Led cross-functional migration of legacy portal systems to a modernized architecture, coordinating technical teams and business stakeholders throughout the transition.</p>
+      </div>
+      <div class="project-card reveal">
+        <div class="project-number">04</div>
+        <div class="project-title">Retail BI Data Pipelines — TCS</div>
+        <p class="project-desc">Built automated ETL pipelines and BI dashboards for two Fortune 500 retailers using Snowflake and Azure, enabling real-time reporting across multiple business units.</p>
+      </div>
+      <div class="project-card reveal">
+        <div class="project-number">05</div>
+        <div class="project-title">Logistics Data Platform — Allity</div>
+        <p class="project-desc">Designed and deployed a governed data platform in Azure Synapse for an international logistics firm, covering financial and operational reporting with strong security standards.</p>
+      </div>
+      <div class="project-card reveal">
+        <div class="project-number">06</div>
+        <div class="project-title">Hospitality Digital Transformation</div>
+        <p class="project-desc">Drove the full digital transformation of a 50+ person F&amp;B business — from IT infrastructure to data management and reporting — over six years of hands-on leadership.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════ EDUCATION ════════ -->
+<section class="section education-section">
+  <div class="section-inner">
+    <div class="section-tag reveal">Education</div>
+    <h2 class="section-title reveal">Always<br/><em>learning</em></h2>
+
+    <div class="edu-grid">
+      <div class="edu-card reveal">
+        <div class="edu-year">August 2025</div>
+        <div class="edu-degree">Certified Digital Project Manager</div>
+        <div class="edu-school">Miami City University</div>
+      </div>
+      <div class="edu-card reveal">
+        <div class="edu-year">March 2025</div>
+        <div class="edu-degree">Master's in Software Engineering</div>
+        <div class="edu-school">Universidad de La Rioja</div>
+        <p class="edu-focus">Focus: Data Engineering &amp; Team Management</p>
+      </div>
+      <div class="edu-card reveal">
+        <div class="edu-year">August 2021</div>
+        <div class="edu-degree">Industry &amp; Systems Engineer</div>
+        <div class="edu-school">Tec Milenio University · México</div>
+        <p class="edu-focus">Focus: Quality Control · Certified Six Sigma Green Belt · Lean Six Sigma</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════ CTA ════════ -->
+<section class="cta-section reveal">
+  <a href="https://www.linkedin.com/in/alessandro-iannilli-36b7a6a0" target="_blank" class="btn btn-cta-primary">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6zM2 9h4v12H2z"/><circle cx="4" cy="4" r="2"/></svg>
+    Connect on LinkedIn
+  </a>
+  <a href="mailto:iannilli.alex@gmail.com" class="btn btn-cta-outline">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+    Send an Email
+  </a>
+  <a href="#" class="btn btn-cta-outline" onclick="window.print();return false;">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+    Download CV
+  </a>
+</section>
+
+<!-- ════════ FOOTER ════════ -->
+<footer>
+  <div style="display:flex;align-items:center;gap:16px;">
+    <svg width="52" height="64" viewBox="0 0 52 72" fill="none" xmlns="http://www.w3.org/2000/svg"
+         style="flex-shrink:0;opacity:0.80;" stroke="#8aab78" stroke-linecap="round" stroke-linejoin="round">
+      <line x1="26" y1="58" x2="26" y2="70" stroke-width="2.5"/>
+      <polyline points="8,58 26,28 44,58"  stroke-width="2"   fill="none"/>
+      <polyline points="13,52 26,36 39,52" stroke-width="1.4" fill="none" opacity="0.55"/>
+      <polyline points="12,42 26,16 40,42" stroke-width="2"   fill="none"/>
+      <polyline points="16,37 26,22 36,37" stroke-width="1.4" fill="none" opacity="0.55"/>
+      <polyline points="16,28 26,6 36,28"  stroke-width="2"   fill="none"/>
+    </svg>
+    <div>
+      <div class="footer-name">Alessandro Iannilli</div>
+      <div class="footer-tagline">Technical Business Analyst · Growing</div>
+    </div>
+  </div>
+  <div class="footer-links">
+    <a href="mailto:iannilli.alex@gmail.com" class="footer-link">Email</a>
+    <a href="https://www.linkedin.com/in/alessandro-iannilli-36b7a6a0" target="_blank" class="footer-link">LinkedIn</a>
+  </div>
+</footer>
+
+<script>
+  // ── SCROLL REVEAL ──
+  const reveals = document.querySelectorAll('.reveal');
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach((entry, i) => {
+      if (entry.isIntersecting) {
+        setTimeout(() => entry.target.classList.add('visible'), i * 80);
+        io.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.12 });
+  reveals.forEach(el => io.observe(el));
+
+  // ── FALLING LEAVES ──
+  const heroLeft = document.querySelector('.hero-left');
+
+  const mapleShape = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><path d="M32 4 l3 10 5-4-2 9 7-2-5 7 7 2-5 5 4 2-6 4 2 7-6-2 0 10-4-5-4 5 0-10-6 2 2-7-6-4 4-2-5-5 7-2-5-7 7 2-2-9 5 4z" fill="currentColor"/><line x1="32" y1="54" x2="32" y2="62" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>`;
+
+  const leafShapes = [
+    `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2C6 2 3 7 3 12c0 4 2.5 7.5 6 9 .5-3 1.5-5.5 3-7-1.5 3-2 5.5-1.5 8H14c3.5-1.5 7-5 7-9 0-5-3-11-9-11z" fill="currentColor"/></svg>`,
+    `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><path d="M16 1 l2 6 3-2-1 5 4-1-3 4 4 1-3 3 2 1-3 2 1 4-3-1 0 6-2-3-2 3 0-6-3 1 1-4-3-2 2-1-3-3 4-1-3-4 4 1-1-5 3 2z" fill="currentColor"/></svg>`,
+    `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 32"><path d="M10 1 C14 6 16 14 14 22 C12 28 10 31 10 31 C10 31 8 28 6 22 C4 14 6 6 10 1z" fill="currentColor"/></svg>`,
+    `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 28 28"><ellipse cx="14" cy="12" rx="10" ry="9" fill="currentColor"/><line x1="14" y1="21" x2="14" y2="28" stroke="currentColor" stroke-width="1.5"/></svg>`,
+  ];
+
+  const leafColors  = ['rgba(138,171,120,0.6)','rgba(181,201,163,0.5)','rgba(111,163,169,0.45)','rgba(92,122,78,0.55)','rgba(122,98,72,0.4)','rgba(216,204,176,0.5)'];
+  const mapleColors = ['rgba(180,100,40,0.75)','rgba(200,120,30,0.7)','rgba(160,80,30,0.72)'];
+  let mapleCount = 0;
+
+  function createLeaf(forceMaple, isLoop) {
+    const el = document.createElement('div');
+    el.classList.add('leaf');
+
+    const isBigMaple = forceMaple || (mapleCount < 2 && Math.random() < 0.08);
+    if (isBigMaple) { el.classList.add('maple-big'); mapleCount++; }
+
+    const size     = isBigMaple ? Math.round((48 + Math.random()*20)*1.2) : Math.round((14 + Math.random()*22)*1.2);
+    const startX   = Math.random() * 100;
+    const duration = isBigMaple ? 10 + Math.random()*8 : 6 + Math.random()*10;
+    const delay    = isLoop ? 0 : Math.random() * 11;
+    const drift    = (Math.random()-0.5) * (isBigMaple ? 200 : 140);
+    const shape    = isBigMaple ? mapleShape : leafShapes[Math.floor(Math.random()*4)];
+    const color    = (isBigMaple ? mapleColors : leafColors)[Math.floor(Math.random()*(isBigMaple?3:6))];
+
+    el.style.cssText = `left:${startX}%;top:-${size}px;width:${size}px;height:${size}px;color:${color};animation-duration:${duration}s;animation-delay:${delay}s;--drift:${drift}px;`;
+    el.innerHTML = shape;
+    heroLeft.appendChild(el);
+
+    setTimeout(() => {
+      el.remove();
+      if (isBigMaple) mapleCount--;
+      createLeaf(isBigMaple && mapleCount < 2, true);
+    }, (duration + delay) * 1000 + 100);
+  }
+
+  createLeaf(true,  false);
+  createLeaf(true,  false);
+  for (let i = 0; i < 24; i++) createLeaf(false, false);
+
+  // ── GRASS FIELD ──
+  const grassField = document.getElementById('grassField');
+  const fw = Math.max(window.innerWidth, 1200);
+  const bc = Math.floor(fw / 5.5);
+
+  for (let i = 0; i < bc; i++) {
+    const blade = document.createElement('div');
+    blade.classList.add('grass-blade');
+    const x = (i / bc) * 100;
+    const w = 2 + Math.random()*3, h = 28 + Math.random()*52;
+    const dur = 1.6 + Math.random()*2.2, dly = -(Math.random()*dur);
+    const lF = -6 + Math.random()*8, lT = lF + 8 + Math.random()*10;
+    const sF = -1 + Math.random()*2, sT = sF + 2 + Math.random()*4;
+    const dark  = `hsl(${120+Math.random()*20},${38+Math.random()*18}%,${22+Math.random()*10}%)`;
+    const light = `hsl(${130+Math.random()*20},${45+Math.random()*20}%,${38+Math.random()*14}%)`;
+    blade.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}" viewBox="0 0 ${w} ${h}" preserveAspectRatio="none"><defs><linearGradient id="g${i}" x1="0" y1="1" x2="0" y2="0"><stop offset="0%" stop-color="${dark}"/><stop offset="100%" stop-color="${light}" stop-opacity="0.85"/></linearGradient></defs><path d="M${w/2} ${h} C${w*.3} ${h*.6} ${w*.7} ${h*.3} ${w*.5} 0" stroke="url(#g${i})" stroke-width="${w*.85}" fill="none" stroke-linecap="round"/></svg>`;
+    blade.style.cssText = `left:${x}%;--blade-w:${w}px;--blade-h:${h}px;--sway-dur:${dur}s;--sway-delay:${dly}s;--lean-from:${lF}deg;--lean-to:${lT}deg;--skew-from:${sF}deg;--skew-to:${sT}deg;`;
+    grassField.appendChild(blade);
+  }
+
+  // ── WIND SWIRLS ──
+  const skillsSection = document.querySelector('.skills-section');
+  let activeSwirlCount = 0;
+
+  function spawnSwirl() {
+    if (activeSwirlCount >= 3) return;
+    activeSwirlCount++;
+    const el   = document.createElement('div');
+    el.classList.add('wind-swirl');
+    const startX = 5  + Math.random()*85, startY = 10 + Math.random()*70;
+    const size   = 60 + Math.random()*80, dur = 3.5 + Math.random()*2.5;
+    const sx1=30+Math.random()*60,  sy1=-20-Math.random()*40;
+    const sx2=80+Math.random()*80,  sy2=-10+Math.random()*30;
+    const sx3=120+Math.random()*60, sy3=-30-Math.random()*40;
+    const sx4=180+Math.random()*80, sy4=-50-Math.random()*30;
+    const op1=0.18+Math.random()*.15, op2=0.12+Math.random()*.12;
+    el.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size*.5}" viewBox="0 0 120 60" fill="none"><path d="M5 45 C20 10 60 5 90 20 C110 30 115 50 95 52 C75 54 65 35 80 28" stroke="rgba(181,201,163,${op1})" stroke-width="2.5" stroke-linecap="round" fill="none"/><path d="M0 30 C25 5 70 0 100 18 C118 28 120 48 100 52" stroke="rgba(111,163,169,${op2})" stroke-width="1.8" stroke-linecap="round" fill="none"/></svg>`;
+    el.style.cssText = `left:${startX}%;top:${startY}%;width:${size}px;--swirl-dur:${dur}s;--sx1:${sx1}px;--sy1:${sy1}px;--sx2:${sx2}px;--sy2:${sy2}px;--sx3:${sx3}px;--sy3:${sy3}px;--sx4:${sx4}px;--sy4:${sy4}px;`;
+    skillsSection.appendChild(el);
+    setTimeout(() => { el.remove(); activeSwirlCount--; }, dur*1000+100);
+  }
+
+  function scheduleSwirl() {
+    setTimeout(() => {
+      const burst = 1 + Math.floor(Math.random()*3);
+      for (let b = 0; b < burst; b++) setTimeout(spawnSwirl, b*300);
+      scheduleSwirl();
+    }, 8000 + Math.random()*7000);
+  }
+
+  scheduleSwirl();
+  setTimeout(spawnSwirl, 1800);
+</script>
+</body>
+</html>
